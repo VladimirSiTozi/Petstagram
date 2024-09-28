@@ -7,7 +7,7 @@ class Pet(models.Model):
         max_length=30,
     )
 
-    personal_per_photo = models.URLField()
+    personal_pet_photo = models.URLField()
 
     date_of_birth = models.DateField(
         blank=True,
@@ -18,9 +18,12 @@ class Pet(models.Model):
         null=False,
         blank=True,
         unique=True,
+        editable=False
     )
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
         if not self.slug:
             self.slug = slugify(f'{self.name}-{self.id}')
         super().save(*args, **kwargs)
