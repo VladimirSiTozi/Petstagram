@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
+from decouple import config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=5oxuf!(79w$=-f$7^ky3%z+=fuqk*$j^(oz$d__oe9-y#&@!r'
+SECRET_KEY = config('MY_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -82,12 +84,12 @@ WSGI_APPLICATION = 'petstagram.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "petstagram_db",
-        "USER": "postgres",
-        "PASSWORD": "admin",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+        "ENGINE": config('MY_ENGINE'),
+        "NAME": config('MY_DATABASE_NAME'),
+        "USER": config('MY_DATABASE_USERNAME'),
+        "PASSWORD": config('MY_DATABASE_PASSWORD'),
+        "HOST": config('MY_HOST'),
+        "PORT": config('MY_PORT'),
     }
 }
 
