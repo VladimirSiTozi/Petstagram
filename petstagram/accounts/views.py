@@ -17,5 +17,5 @@ def edit_profile(request, pk):
     return render(request, 'accounts/profile-edit-page.html')
 
 
-def register(request, pk):
+def register(request):
     return render(request, 'accounts/register-page.html')
