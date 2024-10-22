@@ -99,7 +99,7 @@ class DeletePetView(DeleteView):
 #     return render(request, 'pets/pet-delete-page.html', context)
 
 
-class PetDetailsPage(DetailView, ):
+class PetDetailsPage(DetailView):
     model = Pet
     template_name = 'pets/pet-details-page.html'
     slug_url_kwarg = 'pet_slug'
