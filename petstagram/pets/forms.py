@@ -30,8 +30,8 @@ class PetEditForm(PetBaseForm):
 
 class PetDeleteForm(PetBaseForm):
     def __init__(self, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
-        for field in self.fields.values():
+        for field in self.fields.values():  # ('name': object_field)
             field.widget.attrs['disabled'] = True
             field.widget.attrs['readonly'] = True
