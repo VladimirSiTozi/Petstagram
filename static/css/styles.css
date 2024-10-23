@@ -6,5 +6,6 @@
 @import './photoDetails.css';
 @import './profile.css';
 @import './petProfile.css';
+@import "./pagination.css";
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
 
