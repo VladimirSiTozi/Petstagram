@@ -1,10 +1,11 @@
 from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 
 from petstagram.accounts.managers import AppUserManager
 
 
-class AppUser(AbstractBaseUser,):
+class AppUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         unique=True,
     )
@@ -20,4 +21,4 @@ class AppUser(AbstractBaseUser,):
     USERNAME_FIELD = 'email'  # First credential to login in
     REQUIRED_FIELDS = []
 
-    objects = AppUserManager
+    objects = AppUserManager()

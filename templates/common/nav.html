@@ -4,7 +4,7 @@
     <div class="container">
         <div class="logo">
             <!-- Link to Home Page -->
-            <a href="#">
+            <a href="{% url 'home-page' %}">
                 <img width="50px" src="{% static 'images/free-30-instagram-stories-icons23_122570.png' %}"
                      alt="img1">
             </a>
@@ -17,46 +17,61 @@
 
         <div class="nav-links">
             <ul class="nav-group">
+                {% if request.user.is_authenticated %}
                 <li class="nav-item">
 
                     <!-- Link to Add Pet Page -->
                     <a href="{% url 'add-pet' %}">
-                        <i>Add Pet</i>
+                        <i>Add <br> Pet</i>
                     </a>
                 </li>
                 <li class="nav-item">
-
                     <!-- Link to Add Photo Page -->
                     <a href="{% url 'add-photo' %}">
-                        <i>Add Photo</i>
+                        <i>Add <br> Photo</i>
                     </a>
                 </li>
-                <li class="nav-item">
-
-                    <!-- Link to Login Page -->
-                    <a href="{% url 'login' %}">
-                        <i>Login</i>
-                    </a>
-                </li>
-                <li class="nav-item">
-
-                    <!-- Link to Register Page -->
-                    <a href="{% url 'register' %}">
-                        <i>Register</i>
-                    </a>
-                </li>
-                <li class="nav-item">
-
-                    <!-- Link to Profile Page -->
-                    <a href="#">
-                        <i>Profile</i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#">
-                        <i>Logout</i>
-                    </a>
-                </li>
+                {% endif %}
+                {% if not request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <!-- Link to Login Page -->
+                        <a href="{% url 'login' %}">
+                            <i>Login</i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- Link to Register Page -->
+                        <a href="{% url 'register' %}">
+                            <i>Register</i>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <!-- Link to Profile Page -->
+                        <a href="{% url 'profile-details' request.user.pk %}">
+                        <i>{{ request.user.profile.get_full_name }}</i>
+                        <div class="nav-profile-pic">
+                            <div class="profilepic">
+                                <div class="profile_img">
+                                    {% if request.user.profile.profile_picture %}
+                                        <div class="image">
+                                            <img src="{{ request.user.profile.profile_picture }}" alt="img8">
+                                        </div>
+                                    {% else %}
+                                        <div class="image">
+                                            <img src="{% static '/images/person.png' %}" alt="img8">
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="button"><i>Logout</i></button>
+                    </form>
+                {% endif %}
             </ul>
         </div>
     </div>

@@ -1,21 +1,87 @@
-from django.shortcuts import render
+from django.contrib.auth import get_user_model, login
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.views import LoginView
+from django.db.models import Count
+from django.http import HttpResponseForbidden
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, UpdateView, DetailView, DeleteView
+
+from petstagram.accounts.forms import AppUserCreationForm, ProfileEditForm
+from petstagram.accounts.models import Profile
 
 
-def login(request):
-    return render(request, 'accounts/login-page.html')
+UserModel = get_user_model()
 
 
-def delete_profile(request):
-    return render(request, 'accounts/profile-delete-page.html')
+class AppUserLoginView(LoginView):
+    template_name = 'accounts/login-page.html'
 
 
-def profile_details(request, pk):
-    return render(request, 'accounts/profile-details-page.html')
+class ProfileDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Profile
+    template_name = 'accounts/profile-delete-page.html'
+    success_url = reverse_lazy('login')
+
+    def test_func(self):
+        profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
+        return self.request.user == profile.user
 
 
-def edit_profile(request, pk):
-    return render(request, 'accounts/profile-edit-page.html')
+class ProfileDetailView(LoginRequiredMixin, DetailView):
+    model = UserModel  # or Profile
+    template_name = 'accounts/profile-details-page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # get likes for the photo
+        photos_with_likes = self.object.photo_set.annotate(likes_count=Count('like'))
+        context['total_likes_count'] = sum(p.likes_count for p in photos_with_likes)
+
+        context['total_pets_count'] = self.object.pet_set.count()
+        context['total_photos_count'] = self.object.photo_set.count()
+
+        return context
 
 
-def register(request):
-    return render(request, 'accounts/register-page.html')
+class ProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Profile
+    form_class = ProfileEditForm
+    template_name = 'accounts/profile-edit-page.html'
+
+    def test_func(self):
+        profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
+        return self.request.user == profile.user
+
+    # or
+
+    # def dispatch(self, request, *args, **kwargs):
+    #     if request.user.pk != kwargs['pk']:
+    #         return HttpResponseForbidden()
+    #
+    #     return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy(
+            'profile-details',
+            kwargs={
+                'pk': self.object.pk,
+            }
+        )
+
+
+class AppUserRegisterView(CreateView):
+    model = UserModel
+    form_class = AppUserCreationForm
+    template_name = 'accounts/register-page.html'
+    success_url = reverse_lazy('home-page')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        # user = form.save()  # --> self.object
+        login(self.request, self.object)
+
+        return response
+

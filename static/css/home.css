@@ -109,7 +109,7 @@ body {
 
 .nav-group .nav-item {
     list-style-type: none;
-    margin: 0 8px;
+    margin: 0 18px;
 }
 
 .nav-group .nav-item a {
@@ -447,5 +447,39 @@ div.footer {
 
 .footer a:hover {
     color: #ff0000;
+}
+
+.button {
+    background-color: white;
+    border: none;
+    font-size: 22px;
+    margin: 2.5px 0px 0px 8px;
+    padding: 0;
+    cursor: pointer;
+}
+
+
+.nav-item {
+    display: flex;
+    align-items: center; /* Vertically aligns items within nav-item */
+    justify-content: center; /* Center-aligns items horizontally */
+}
+
+.nav-item a {
+    display: flex;
+    flex-direction: column; /* Stacks Profile text above the profile picture */
+    align-items: center; /* Centers the content horizontally */
+    text-align: center; /* Centers text within the element */
+    text-decoration: none;
+}
+
+.nav-profile-pic {
+    margin-top: 8px; /* Adds some spacing between the text and profile picture */
+}
+
+.profilepic {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
